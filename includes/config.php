@@ -1,11 +1,9 @@
 <?php
-// filepath: C:\Users\kanka\PHP-PROJECT-12Page\includes\config.php
-
 // Database configuration
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'your_database_name');
-define('DB_USER', 'your_database_user');
-define('DB_PASS', 'your_database_password');
+define('DB_NAME', 'my_project_db');      // <-- Aapke naye database ka naam
+define('DB_USER', 'root');               // <-- XAMPP ka default username 'root' hota hai
+define('DB_PASS', '');                   // <-- XAMPP ka default password khaali (empty) hota hai
 
 // Application URL
 define('BASE_URL', 'http://localhost/PHP-PROJECT-12Page/public/');
