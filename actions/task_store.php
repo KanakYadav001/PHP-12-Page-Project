@@ -1,5 +1,5 @@
 <?php
-// filepath: c:\Users\kanka\PHP-PROJECT-12Page\actions\task_store.php
+// filepath: C:\Users\kanka\PHP-PROJECT-12Page\actions\task_store.php
 require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../includes/db.php';
 require_once __DIR__ . '/../includes/auth.php';
@@ -8,33 +8,34 @@ require_once __DIR__ . '/../includes/helpers.php';
 require_login();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Validate CSRF token
     if (!validate_csrf_token($_POST['csrf_token'])) {
-        die("CSRF token validation failed.");
+        set_flash('danger', 'CSRF token validation failed.');
+        redirect('index.php?page=tasks');
     }
 
     $title = $_POST['title'] ?? '';
     $description = $_POST['description'] ?? '';
 
     // Sanitize input
-    $title = filter_var($title, FILTER_SANITIZE_STRING);
-    $description = filter_var($description, FILTER_SANITIZE_STRING);
+    $title = htmlspecialchars($title);
+    $description = htmlspecialchars($description);
 
-    // Basic validation
     if (empty($title)) {
-        die("Title is required.");
+        set_flash('danger', 'Title is required.');
+        redirect('index.php?page=task_form');
     }
 
     try {
         $stmt = $pdo->prepare("INSERT INTO tasks (user_id, title, description) VALUES (?, ?, ?)");
         $stmt->execute([$_SESSION['user_id'], $title, $description]);
 
-        header('Location: ../public/index.php?page=tasks');
-        exit;
+        set_flash('success', 'Task created successfully.');
+        redirect('index.php?page=tasks');
     } catch (PDOException $e) {
         error_log("Database error: " . $e->getMessage());
-        die("An error occurred. Please try again later.");
+        set_flash('danger', 'An error occurred. Please try again later.');
+        redirect('index.php?page=task_form');
     }
 } else {
-    die("Invalid request method.");
+    redirect('index.php');
 }
