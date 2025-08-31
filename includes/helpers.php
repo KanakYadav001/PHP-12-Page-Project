@@ -1,28 +1,28 @@
 <?php
+// filepath: C:\Users\kanka\PHP-PROJECT-12Page\includes\helpers.php
 session_start();
+
 function redirect(string $path)
 {
     header('Location: ' . BASE_URL . ltrim($path, '/'));
     exit;
 }
+
 function e(string $v)
 {
     return htmlspecialchars($v, ENT_QUOTES, 'UTF-8');
 }
+
 function set_flash($type, $msg)
 {
     $_SESSION['flash'][$type] = $msg;
 }
+
 function get_flash_all()
 {
     $f = $_SESSION['flash'] ?? [];
     $_SESSION['flash'] = [];
     return $f;
-}
-
-function h(string $string): string
-{
-    return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
 }
 
 function generate_csrf_token(): string

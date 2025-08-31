@@ -1,40 +1,45 @@
 <?php
-// filepath: c:\Users\kanka\PHP-PROJECT-12Page\actions\auth_register.php
+// filepath: C:\Users\kanka\PHP-PROJECT-12Page\actions\auth_register.php
 require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../includes/db.php';
 require_once __DIR__ . '/../includes/auth.php';
 require_once __DIR__ . '/../includes/helpers.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Validate CSRF token
     if (!validate_csrf_token($_POST['csrf_token'])) {
-        die("CSRF token validation failed.");
+        set_flash('danger', 'CSRF token validation failed.');
+        redirect('index.php?page=register');
     }
 
-    $username = $_POST['username'] ?? '';
+    $name = $_POST['name'] ?? '';
+    $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
 
-    // Sanitize input
-    $username = filter_var($username, FILTER_SANITIZE_STRING);
+    $name = htmlspecialchars($name);
+    $email = htmlspecialchars($email);
 
-    // Basic validation
-    if (empty($username) || empty($password)) {
-        die("Username and password are required.");
+    if (empty($name) || empty($email) || empty($password)) {
+        set_flash('danger', 'All fields are required.');
+        redirect('index.php?page=register');
     }
 
-    // Hash the password
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
     try {
-        $stmt = $pdo->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
-        $stmt->execute([$username, $hashed_password]);
+        $stmt = $pdo->prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)");
+        $stmt->execute([$name, $email, $hashed_password]);
 
-        header('Location: ../public/index.php?page=login');
-        exit;
+        set_flash('success', 'You have been registered successfully. Please login.');
+        redirect('index.php?page=login');
     } catch (PDOException $e) {
         error_log("Database error: " . $e->getMessage());
-        die("An error occurred. Please try again later.");
+        if ($e->errorInfo[1] == 1062) { // Duplicate entry
+            set_flash('danger', 'This email is already registered.');
+        } else {
+            set_flash('danger', 'An error occurred. Please try again later.');
+        }
+        redirect('index.php?page=register');
     }
 } else {
-    die("Invalid request method.");
+    redirect('index.php?page=register');
 }

@@ -1,12 +1,15 @@
 <?php
+// filepath: C:\Users\kanka\PHP-PROJECT-12Page\public\index.php
 require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../includes/helpers.php';
 require_once __DIR__ . '/../includes/auth.php';
+require_once __DIR__ . '/../includes/db.php';
+
 
 $page = $_GET['page'] ?? 'home';
 
 // Sanitize the page parameter
-$page = filter_var($page, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+$page = htmlspecialchars($page, ENT_QUOTES, 'UTF-8');
 
 $public = ['home', 'login', 'register'];
 
@@ -21,6 +24,11 @@ $map = [
   '404' => '404.php',
 ];
 
+if (!in_array($page, $public)) {
+  require_login();
+}
+
+$view = $map[$page] ?? '404.php';
 
 
 include __DIR__ . '/../views/partials/header.php';

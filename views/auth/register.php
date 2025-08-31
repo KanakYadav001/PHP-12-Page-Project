@@ -1,25 +1,21 @@
 <?php
-require_once __DIR__ . '/../../includes/helpers.php';
+// filepath: C:\Users\kanka\PHP-PROJECT-12Page\views\auth\register.php
 ?>
-
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Register</title>
-</head>
-<body>
-
-<form action="../../actions/auth_register.php" method="post">
-    <input type="hidden" name="csrf_token" value="<?= h(generate_csrf_token()) ?>">
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username"><br><br>
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password"><br><br>
-    <input type="submit" value="Register">
-    <?php if (isset($_GET['error'])): ?>
-        <p style="color: red;"><?= h($_GET['error']) ?></p>
-    <?php endif; ?>
+<h3>Register</h3>
+<form method="post" action="<?= BASE_URL ?>actions/auth_register.php" class="mt-3" style="max-width:420px">
+  <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
+  <div class="mb-3">
+    <label class="form-label">Name</label>
+    <input class="form-control" type="text" name="name" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Email</label>
+    <input class="form-control" type="email" name="email" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Password</label>
+    <input class="form-control" type="password" name="password" required>
+  </div>
+  <button class="btn btn-primary">Register</button>
 </form>
-
-</body>
-</html>
+<p class="mt-2"><a href="<?= BASE_URL ?>index.php?page=login">Already have an account?</a></p>

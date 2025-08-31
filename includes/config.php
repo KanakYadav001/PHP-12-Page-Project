@@ -1,5 +1,5 @@
 <?php
-// filepath: c:\Users\kanka\PHP-PROJECT-12Page\includes\config.php
+// filepath: C:\Users\kanka\PHP-PROJECT-12Page\includes\config.php
 
 // Database configuration
 define('DB_HOST', 'localhost');
@@ -8,7 +8,7 @@ define('DB_USER', 'your_database_user');
 define('DB_PASS', 'your_database_password');
 
 // Application URL
-define('APP_URL', 'http://localhost/your_project');
+define('BASE_URL', 'http://localhost/PHP-PROJECT-12Page/public/');
 
 // Error reporting
 error_reporting(E_ALL);
